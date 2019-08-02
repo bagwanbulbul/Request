@@ -1,6 +1,6 @@
 import requests
 import json
-#import os.path
+import os.path
 print "******** Welcome to saral*************"
 url = 'http://saral.navgurukul.org/api/courses'
 
@@ -32,7 +32,6 @@ def api1Calling(url):
         course_id_list.append(course["id"])
         print j+1, course["name"], "exercise id ", course["id"]
         j = j+1
-
     fileName = "courses.json"
     fileData = json_data
     writingFile(fileName, fileData)
@@ -78,7 +77,7 @@ def api2Calling(url2):
 url2 = "http://saral.navgurukul.org/api/courses/"+str(course_id)+"/exercises"
 a = api2Calling(url2)
 
-up_input = raw_input("----enter up if you want up = ")
+up_input = raw_input("----if you want to up so enter (up) and you don't want enter (n) = ")
 if up_input == "up":
     data = api1Calling(url)
 else:
