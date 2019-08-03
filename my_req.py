@@ -21,7 +21,6 @@ def readingfile(fileName):
     load_file = json.loads(data_file)  # dict type
     return load_file
 
-
 course_id_list = []
 def api1Calling(url):
     getData = requests.get(url)
@@ -86,7 +85,8 @@ else:
     print user_slug
 
     slug = []
-
+    slug_id_list = []
+    dic = {}
     def getData():
         get_exercise_data = requests.get(url2)
         dict_data = get_exercise_data.json()  # dict type data
@@ -103,25 +103,31 @@ else:
                 i = 0
                 print i+1, course["name"], course["id"]
                 slug.append(course["slug"])
+                slug_id_list.append(course["id"])
                 inside_childexercise_data = course["childExercises"]
                 j = 1
                 for index in inside_childexercise_data:
                     slug.append(index["slug"])
+                    slug_id_list.append(index["id"])
                     print "\t", "\t", j+1, index["name"]
                     j = j+1
             i = i+1
-        return slug
+        dic["slug"] = slug
+        dic["child_id"] = slug_id_list
+        return dic
     b = getData()
-    print b
 
     user_input3 = input("-----which exercise you want chose number = ")
-    chose_slug = b[user_input3-1]
-    print chose_slug
+    choose_id = b["child_id"][user_input3-1]
+    print choose_id
+    choose_slug = b["slug"][user_input3-1]
+    print choose_slug
 
     def api3(url3):
             get_contain_data = requests.get(url3)
             dict_contain_data = get_contain_data.json()
-            inside_cotentData = dict_contain_data["content"]
+            print dict_contain_data
+            inside_cotentData = dict_contain_data['content']
             print inside_cotentData
 
             fileName = "contain.json"
@@ -129,7 +135,7 @@ else:
             writingFile(fileName, fileData)
             containData = readingfile(fileName)
     url3 = "http://saral.navgurukul.org/api/courses/" + \
-        str(user_slug)+"/exercise/getBySlug?slug="+str(chose_slug)
+        str(choose_id)+"/exercise/getBySlug?slug="+str(choose_slug)
     print api3(url3)
 
     while True:
@@ -139,20 +145,22 @@ else:
                         print "---sorry their is no page-----"
                         break
                   else:
-                        chose_slug = b[(user_input3-1)-1]
+                        choose_slug = b["slug"][(user_input3-1)-1]
+                        choose_id = b["child_id"][(user_input3-1)-1]
                         print chose_slug
                         urla = "http://saral.navgurukul.org/api/courses/" + \
-                        str(user_slug)+"/exercise/getBySlug?slug="+str(chose_slug)
+                        str(choose_id)+"/exercise/getBySlug?slug="+str(choose_slug)
                         previous_data = api3(urla)
                         user_input3=user_input3-1
             elif previous_input == "n":
-                  if user_input3 == (len(b)):
+                  if user_input3 == (len(slug)):
                         print "sorry page is not found"
                         break
                   else:
-                        chose_slug = b[(user_input3-1)+1]
+                        choose_slug = b["slug"][(user_input3-1)+1]
+                        choose_id = b["child_id"][(user_input3-1)+1]
                         urlb = "http://saral.navgurukul.org/api/courses/" + \
-                        str(user_slug)+"/exercise/getBySlug?slug="+str(chose_slug)
+                        str(choose_slug)+"/exercise/getBySlug?slug="+str(choose_slug)
                         previous_data = api3(urlb)
                         user_input3=user_input3+1
                   
